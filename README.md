@@ -19,7 +19,15 @@
 - `pdftotext`
 - `pdftoppm`
 
+`pdftotext` と `pdftoppm` はどちらも Poppler に含まれます。MacPorts では次で入ります:
+
+```bash
+sudo port install poppler
+```
+
 ## Quick Start
+
+すべてのコマンドはリポジトリ直下で実行します。
 
 1. リポジトリ直下でテストを確認する
 

@@ -10,16 +10,16 @@ Use this skill when the user wants a PDF paper translated faithfully into Japane
 ## Workflow
 
 1. Confirm the absolute PDF path.
-2. Prepare a local job:
+2. From the repository root, prepare a local job:
 
 ```bash
-uv run python /Users/sugawara/Documents/PaperTranslater/codex_paper.py prepare /absolute/path/to/paper.pdf
+uv run python codex_paper.py prepare /absolute/path/to/paper.pdf
 ```
 
 3. Check progress any time:
 
 ```bash
-uv run python /Users/sugawara/Documents/PaperTranslater/codex_paper.py status /absolute/path/to/job-dir
+uv run python codex_paper.py status /absolute/path/to/job-dir
 ```
 
 4. Translate pending chunks by reading each `source/chunk_XXXX.source.md` file and writing the Japanese Markdown to the matching `translations/chunk_XXXX.ja.md` path.
@@ -30,7 +30,7 @@ uv run python /Users/sugawara/Documents/PaperTranslater/codex_paper.py status /a
 9. When all chunks are translated, assemble the final Markdown:
 
 ```bash
-uv run python /Users/sugawara/Documents/PaperTranslater/codex_paper.py assemble /absolute/path/to/job-dir
+uv run python codex_paper.py assemble /absolute/path/to/job-dir
 ```
 
 10. Report the final Markdown path. Do not paraphrase the paper in chat unless the user asks.
