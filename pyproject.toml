@@ -1,0 +1,10 @@
+[project]
+name = "paper-translater"
+version = "0.1.0"
+description = "Local helper tools for chunked paper translation workflows."
+requires-python = ">=3.11"
+dependencies = []
+
+[tool.uv]
+package = false
+

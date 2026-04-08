@@ -1,0 +1,7 @@
+interface:
+  display_name: "Paper Translator"
+  short_description: "論文PDFを逐語訳してMarkdown化する"
+  default_prompt: "Use $paper-translator to translate this academic PDF into faithful Japanese Markdown with equations preserved, using Codex and local chunk files instead of the API."
+
+policy:
+  allow_implicit_invocation: true

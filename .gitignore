@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.DS_Store
+.paper-translator-cache/
+.paper-translator-jobs/
+.venv/
+.uv-cache/
