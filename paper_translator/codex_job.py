@@ -285,10 +285,12 @@ def _normalize_title_line(line: str) -> str:
     value = re.sub(r"\s+", " ", line.strip())
     if not value:
         return value
-    previous = None
-    while previous != value:
-        previous = value
-        value = re.sub(r"\b([A-Z]) ([A-Z]{2,})\b", r"\1\2", value)
+    if not re.search(r"[a-z]", value):
+        previous = None
+        while previous != value:
+            previous = value
+            value = re.sub(r"\b([A-Z]) ([A-Z]{2,})\b", r"\1\2", value)
+            value = re.sub(r"\b([A-Z]) ([A-Z][a-zA-Z-]+)\b", r"\1\2", value)
     value = re.sub(r"\s*-\s*", "-", value)
     return value.strip()
 
@@ -348,7 +350,6 @@ def _extract_markdown_title(content: str) -> str:
             continue
         if stripped.startswith("# "):
             return stripped[2:].strip()
-        return ""
     return ""
 
 
@@ -376,6 +377,12 @@ def _rewrite_manifest_paths(job_dir: Path, manifest: dict, title: str, output_pa
             chunk["image_paths"] = [
                 _replace_path_root(path, old_job_dir, job_dir) for path in chunk["image_paths"]
             ]
+        source_path = Path(chunk["source_path"])
+        if source_path.exists():
+            source_path.write_text(
+                source_path.read_text(encoding="utf-8").replace(str(old_job_dir), str(job_dir)),
+                encoding="utf-8",
+            )
     (job_dir / "manifest.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2),
         encoding="utf-8",

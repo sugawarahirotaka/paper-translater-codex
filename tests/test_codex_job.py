@@ -5,7 +5,13 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from paper_translator.codex_job import assemble_job, format_status, guess_title, pending_chunks
+from paper_translator.codex_job import (
+    _extract_markdown_title,
+    assemble_job,
+    format_status,
+    guess_title,
+    pending_chunks,
+)
 
 
 class CodexJobTest(unittest.TestCase):
@@ -33,6 +39,33 @@ class CodexJobTest(unittest.TestCase):
         self.assertEqual(
             guess_title(text),
             "Vanilla Bayesian Optimization Performs Great in High Dimensions",
+        )
+
+    def test_guess_title_skips_published_banner_and_repairs_split_caps(self) -> None:
+        text = "\n".join(
+            [
+                "Published as a conference paper at ICLR 2025",
+                "",
+                "S TANDARD G AUSSIAN P ROCESS IS A LL YOU N EED FOR",
+                "H IGH -D IMENSIONAL BAYESIAN O PTIMIZATION",
+            ]
+        )
+        self.assertEqual(
+            guess_title(text),
+            "STANDARD GAUSSIAN PROCESS IS ALL YOU NEED FOR HIGH-DIMENSIONAL BAYESIAN OPTIMIZATION",
+        )
+
+    def test_extract_markdown_title_skips_banner_lines(self) -> None:
+        content = "\n".join(
+            [
+                "ICLR 2025 採録論文",
+                "",
+                "# STANDARD GAUSSIAN PROCESS IS ALL YOU NEED FOR HIGH-DIMENSIONAL BAYESIAN OPTIMIZATION",
+            ]
+        )
+        self.assertEqual(
+            _extract_markdown_title(content),
+            "STANDARD GAUSSIAN PROCESS IS ALL YOU NEED FOR HIGH-DIMENSIONAL BAYESIAN OPTIMIZATION",
         )
 
     def test_pending_and_assemble(self) -> None:
