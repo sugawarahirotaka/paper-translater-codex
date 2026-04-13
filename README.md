@@ -55,6 +55,10 @@ UV_CACHE_DIR=.uv-cache uv run python codex_paper.py status "/absolute/path/to/jo
 UV_CACHE_DIR=.uv-cache uv run python codex_paper.py assemble "/absolute/path/to/job-dir"
 ```
 
+`assemble` 実行後、完成版 Markdown は job ディレクトリ内の `final/` に保存され、さらに Obsidian 用の
+`/Users/sugawara/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian_vault/02_Read-only/Papers`
+にも同名でコピーされます。このコピー先パスは現状 `paper_translator/codex_job.py` にハードコードされています。
+
 ## Codex Skill はどこまで自動か
 
 `paper-translator` skill は、Codex との会話の中で使うための手順定義です。常駐プロセスではないので、PDF が置かれたディレクトリを勝手に監視して自動実行することはありません。

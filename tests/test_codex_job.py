@@ -4,6 +4,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from paper_translator.codex_job import (
     _extract_markdown_title,
@@ -108,11 +109,16 @@ class CodexJobTest(unittest.TestCase):
                 assemble_job(job_dir)
 
             chunk2.write_text("## 2\n\n本文B\n", encoding="utf-8")
-            output_path = assemble_job(job_dir)
+            obsidian_dir = job_dir / "obsidian-papers"
+            with patch("paper_translator.codex_job.OBSIDIAN_PAPERS_DIR", obsidian_dir):
+                output_path = assemble_job(job_dir)
             self.assertTrue(output_path.exists())
             assembled = output_path.read_text(encoding="utf-8")
             self.assertIn("本文A", assembled)
             self.assertIn("本文B", assembled)
+            mirrored_output = obsidian_dir / output_path.name
+            self.assertTrue(mirrored_output.exists())
+            self.assertEqual(mirrored_output.read_text(encoding="utf-8"), assembled)
 
 
 if __name__ == "__main__":

@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import shutil
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
@@ -10,6 +11,10 @@ from pathlib import Path
 from .models import ChunkInput, PageArtifact
 from .pdf_tools import ensure_pdf_commands, extract_pages, get_page_count
 from .text_utils import normalize_markdown, slugify_title
+
+OBSIDIAN_PAPERS_DIR = Path(
+    "/Users/sugawara/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian_vault/02_Read-only/Papers"
+)
 
 
 @dataclass(slots=True)
@@ -142,6 +147,7 @@ def assemble_job(job_dir: Path, allow_partial: bool = False) -> Path:
         title=preferred_title,
         output_path=output_path,
     )
+    _copy_output_to_obsidian_papers(output_path)
     return output_path
 
 
@@ -429,3 +435,13 @@ def _page_label(page_numbers: list[int]) -> str:
     if len(page_numbers) == 1:
         return str(page_numbers[0])
     return f"{page_numbers[0]}-{page_numbers[-1]}"
+
+
+def _copy_output_to_obsidian_papers(output_path: Path) -> Path:
+    destination_dir = OBSIDIAN_PAPERS_DIR.expanduser()
+    destination_dir.mkdir(parents=True, exist_ok=True)
+    destination_path = destination_dir / output_path.name
+    if output_path.resolve() == destination_path.resolve():
+        return destination_path
+    shutil.copy2(output_path, destination_path)
+    return destination_path
